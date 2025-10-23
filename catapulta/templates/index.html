@@ -1,0 +1,817 @@
+<!DOCTYPE html>
+<html lang="es">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>🏰 Catapulta - Defensa del Castillo</title>
+    <style>
+        * {
+            margin: 0;
+            padding: 0;
+            box-sizing: border-box;
+        }
+
+        body {
+            font-family: 'Arial', sans-serif;
+            background: linear-gradient(135deg, #667eea 0%, #764ba2 100%);
+            color: #fff;
+            min-height: 100vh;
+            padding: 20px;
+        }
+
+        .container {
+            max-width: 1400px;
+            margin: 0 auto;
+        }
+
+        header {
+            text-align: center;
+            padding: 20px;
+            background: rgba(0, 0, 0, 0.3);
+            border-radius: 10px;
+            margin-bottom: 20px;
+        }
+
+        h1 {
+            font-size: 2.5em;
+            margin-bottom: 10px;
+            text-shadow: 2px 2px 4px rgba(0, 0, 0, 0.5);
+        }
+
+        .subtitle {
+            font-size: 1.1em;
+            opacity: 0.9;
+        }
+
+        .game-grid {
+            display: grid;
+            grid-template-columns: 400px 1fr;
+            gap: 20px;
+            margin-bottom: 20px;
+        }
+
+        .panel {
+            background: rgba(255, 255, 255, 0.1);
+            backdrop-filter: blur(10px);
+            border-radius: 10px;
+            padding: 20px;
+            box-shadow: 0 8px 32px 0 rgba(31, 38, 135, 0.37);
+            border: 1px solid rgba(255, 255, 255, 0.18);
+        }
+
+        .panel h2 {
+            margin-bottom: 15px;
+            padding-bottom: 10px;
+            border-bottom: 2px solid rgba(255, 255, 255, 0.3);
+        }
+
+        .form-group {
+            margin-bottom: 15px;
+        }
+
+        label {
+            display: block;
+            margin-bottom: 5px;
+            font-weight: bold;
+        }
+
+        input[type="text"],
+        input[type="number"],
+        select {
+            width: 100%;
+            padding: 10px;
+            border: none;
+            border-radius: 5px;
+            background: rgba(255, 255, 255, 0.9);
+            color: #333;
+            font-size: 14px;
+        }
+
+        button {
+            padding: 12px 24px;
+            border: none;
+            border-radius: 5px;
+            cursor: pointer;
+            font-size: 16px;
+            font-weight: bold;
+            transition: all 0.3s;
+            width: 100%;
+            margin-top: 10px;
+        }
+
+        button:hover {
+            transform: translateY(-2px);
+            box-shadow: 0 5px 15px rgba(0, 0, 0, 0.3);
+        }
+
+        .btn-primary {
+            background: #4CAF50;
+            color: white;
+        }
+
+        .btn-primary:hover {
+            background: #45a049;
+        }
+
+        .btn-secondary {
+            background: #2196F3;
+            color: white;
+        }
+
+        .btn-secondary:hover {
+            background: #0b7dda;
+        }
+
+        .btn-danger {
+            background: #f44336;
+            color: white;
+        }
+
+        .btn-danger:hover {
+            background: #da190b;
+        }
+
+        .btn-warning {
+            background: #FF9800;
+            color: white;
+        }
+
+        .btn-warning:hover {
+            background: #e68900;
+        }
+
+        .btn-purple {
+            background: #9C27B0;
+            color: white;
+        }
+
+        .btn-purple:hover {
+            background: #7B1FA2;
+        }
+
+        .stat-bar {
+            background: rgba(0, 0, 0, 0.3);
+            border-radius: 10px;
+            padding: 10px;
+            margin-bottom: 10px;
+        }
+
+        .stat-label {
+            display: flex;
+            justify-content: space-between;
+            margin-bottom: 5px;
+            font-size: 14px;
+        }
+
+        .progress-bar {
+            height: 20px;
+            background: rgba(0, 0, 0, 0.3);
+            border-radius: 10px;
+            overflow: hidden;
+        }
+
+        .progress-fill {
+            height: 100%;
+            transition: width 0.5s ease;
+            border-radius: 10px;
+        }
+
+        .progress-green {
+            background: linear-gradient(90deg, #4CAF50, #8BC34A);
+        }
+
+        .progress-blue {
+            background: linear-gradient(90deg, #2196F3, #03A9F4);
+        }
+
+        .progress-purple {
+            background: linear-gradient(90deg, #9C27B0, #E91E63);
+        }
+
+        .progress-red {
+            background: linear-gradient(90deg, #f44336, #E91E63);
+        }
+
+        #canvas-batalla {
+            width: 100%;
+            height: 400px;
+            background: linear-gradient(180deg, #87CEEB 0%, #98D8C8 100%);
+            border-radius: 10px;
+            margin-bottom: 15px;
+            display: block;
+        }
+
+        .info-box {
+            background: rgba(0, 0, 0, 0.2);
+            padding: 15px;
+            border-radius: 5px;
+            margin-bottom: 15px;
+            font-family: 'Courier New', monospace;
+            font-size: 13px;
+            line-height: 1.6;
+        }
+
+        .enemy-list {
+            max-height: 200px;
+            overflow-y: auto;
+        }
+
+        .enemy-item {
+            background: rgba(255, 255, 255, 0.1);
+            padding: 10px;
+            margin-bottom: 5px;
+            border-radius: 5px;
+            cursor: pointer;
+            transition: all 0.3s;
+        }
+
+        .enemy-item:hover {
+            background: rgba(255, 255, 255, 0.2);
+            transform: translateX(5px);
+        }
+
+        .enemy-item.selected {
+            background: rgba(76, 175, 80, 0.3);
+            border-left: 4px solid #4CAF50;
+        }
+
+        .stats-grid {
+            display: grid;
+            grid-template-columns: 1fr 1fr;
+            gap: 10px;
+            margin-bottom: 15px;
+        }
+
+        .stat-card {
+            background: rgba(0, 0, 0, 0.2);
+            padding: 15px;
+            border-radius: 5px;
+            text-align: center;
+        }
+
+        .stat-value {
+            font-size: 2em;
+            font-weight: bold;
+            margin-top: 5px;
+        }
+
+        .message {
+            padding: 15px;
+            border-radius: 5px;
+            margin-bottom: 15px;
+            font-weight: bold;
+            text-align: center;
+            display: none;
+        }
+
+        .message.success {
+            background: rgba(76, 175, 80, 0.8);
+            display: block;
+        }
+
+        .message.error {
+            background: rgba(244, 67, 54, 0.8);
+            display: block;
+        }
+
+        .message.info {
+            background: rgba(33, 150, 243, 0.8);
+            display: block;
+        }
+
+        #inventario {
+            font-size: 13px;
+        }
+
+        .action-buttons {
+            display: grid;
+            grid-template-columns: 1fr 1fr;
+            gap: 10px;
+        }
+
+        .hidden {
+            display: none !important;
+        }
+
+        @keyframes pulse {
+            0% { transform: scale(1); }
+            50% { transform: scale(1.05); }
+            100% { transform: scale(1); }
+        }
+
+        .pulse {
+            animation: pulse 0.5s ease;
+        }
+    </style>
+</head>
+<body>
+    <div class="container">
+        <header>
+            <h1>🏰 CATAPULTA - DEFENSA DEL CASTILLO 🏰</h1>
+            <p class="subtitle">Programación Orientada a Objetos en Acción</p>
+        </header>
+
+        <div id="mensaje" class="message"></div>
+
+        <div class="game-grid">
+            <!-- Panel Izquierdo: Construcción y Estado -->
+            <div>
+                <!-- Constructor -->
+                <div class="panel" id="panel-construccion">
+                    <h2>🔨 Constructor de Catapulta</h2>
+                    
+                    <div class="form-group">
+                        <label>Nombre:</label>
+                        <input type="text" id="nombre" value="Mi Catapulta Épica" maxlength="30">
+                    </div>
+
+                    <button class="btn-primary" onclick="crearCatapulta()">✨ Crear Catapulta</button>
+
+                    <div id="materiales-section" class="hidden">
+                        <hr style="margin: 20px 0; border-color: rgba(255,255,255,0.3);">
+                        
+                        <div class="form-group">
+                            <label>Palos (longitud 10-50 cm):</label>
+                            <div style="display: flex; gap: 5px;">
+                                <input type="number" id="palo-valor" min="10" max="50" value="30" style="width: 70%;">
+                                <button class="btn-secondary" onclick="agregarMaterial('palo')">➕</button>
+                            </div>
+                        </div>
+
+                        <div class="form-group">
+                            <label>Gomas (elasticidad 1-10):</label>
+                            <div style="display: flex; gap: 5px;">
+                                <input type="number" id="goma-valor" min="1" max="10" value="8" style="width: 70%;">
+                                <button class="btn-secondary" onclick="agregarMaterial('goma')">➕</button>
+                            </div>
+                        </div>
+
+                        <div class="form-group">
+                            <label>Tapones:</label>
+                            <button class="btn-secondary" onclick="agregarMaterial('tapon')">➕ Agregar Tapón</button>
+                        </div>
+
+                        <div class="form-group">
+                            <label>Corchos (cantidad):</label>
+                            <div style="display: flex; gap: 5px;">
+                                <input type="number" id="corcho-valor" min="1" max="20" value="5" style="width: 70%;">
+                                <button class="btn-secondary" onclick="agregarMaterial('corcho')">➕</button>
+                            </div>
+                        </div>
+
+                        <div class="form-group">
+                            <label>Pegamento (calidad 1-10):</label>
+                            <div style="display: flex; gap: 5px;">
+                                <input type="number" id="pegamento-valor" min="1" max="10" value="9" style="width: 70%;">
+                                <button class="btn-secondary" onclick="agregarMaterial('pegamento')">➕</button>
+                            </div>
+                        </div>
+
+                        <div id="inventario" class="info-box"></div>
+
+                        <button class="btn-primary" onclick="construir()">🔨 CONSTRUIR CATAPULTA</button>
+                    </div>
+                </div>
+
+                <!-- Estado -->
+                <div class="panel" style="margin-top: 20px;">
+                    <h2>📊 Estado de la Catapulta</h2>
+                    
+                    <div id="estado-catapulta">
+                        <p style="text-align: center; padding: 40px 0; opacity: 0.6;">
+                            Crea y construye tu catapulta primero
+                        </p>
+                    </div>
+
+                    <div id="acciones-catapulta" class="hidden action-buttons">
+                        <button class="btn-warning" onclick="reparar()">🔧 Reparar</button>
+                        <button class="btn-purple" onclick="mostrarMejoras()">⚡ Mejorar</button>
+                    </div>
+                </div>
+            </div>
+
+            <!-- Panel Derecho: Campo de Batalla -->
+            <div>
+                <!-- Campo de Batalla -->
+                <div class="panel">
+                    <div style="display: flex; justify-content: space-between; margin-bottom: 15px;">
+                        <h2>⚔️ Campo de Batalla</h2>
+                        <div>
+                            <span id="nivel" style="font-size: 1.2em; margin-right: 20px;">🎯 Nivel: 1</span>
+                            <span id="puntos" style="font-size: 1.2em;">💎 Puntos: 0</span>
+                        </div>
+                    </div>
+
+                    <canvas id="canvas-batalla" width="800" height="400"></canvas>
+
+                    <button id="btn-oleada" class="btn-danger hidden" onclick="generarOleada()">
+                        ⚔️ GENERAR OLEADA DE ENEMIGOS
+                    </button>
+                    <button id="btn-disparar" class="btn-danger hidden" onclick="disparar()">
+                        🎯 DISPARAR AL ENEMIGO SELECCIONADO
+                    </button>
+                </div>
+
+                <!-- Enemigos -->
+                <div class="panel" style="margin-top: 20px;">
+                    <h2>👾 Enemigos</h2>
+                    <div id="lista-enemigos" class="enemy-list">
+                        <p style="text-align: center; padding: 20px 0; opacity: 0.6;">
+                            Genera una oleada de enemigos
+                        </p>
+                    </div>
+                </div>
+            </div>
+        </div>
+    </div>
+
+    <script>
+        let selectedEnemy = null;
+
+        // Crear catapulta
+        async function crearCatapulta() {
+            const nombre = document.getElementById('nombre').value || 'Mi Catapulta';
+            
+            const response = await fetch('/api/crear_catapulta', {
+                method: 'POST',
+                headers: {'Content-Type': 'application/json'},
+                body: JSON.stringify({nombre})
+            });
+            
+            const data = await response.json();
+            
+            if (data.success) {
+                mostrarMensaje(data.mensaje, 'success');
+                document.getElementById('materiales-section').classList.remove('hidden');
+                actualizarInventario({palos: 0, gomas: 0, tapones: 0, corchos: 0, pegamento: false});
+            } else {
+                mostrarMensaje(data.error, 'error');
+            }
+        }
+
+        // Agregar material
+        async function agregarMaterial(tipo) {
+            let valor = 1;
+            
+            if (tipo === 'palo') valor = document.getElementById('palo-valor').value;
+            else if (tipo === 'goma') valor = document.getElementById('goma-valor').value;
+            else if (tipo === 'corcho') valor = document.getElementById('corcho-valor').value;
+            else if (tipo === 'pegamento') valor = document.getElementById('pegamento-valor').value;
+            
+            const response = await fetch('/api/agregar_material', {
+                method: 'POST',
+                headers: {'Content-Type': 'application/json'},
+                body: JSON.stringify({tipo, valor})
+            });
+            
+            const data = await response.json();
+            
+            if (data.success) {
+                actualizarInventario(data.inventario);
+                mostrarMensaje(`✓ ${tipo.charAt(0).toUpperCase() + tipo.slice(1)} agregado`, 'success');
+                setTimeout(() => ocultarMensaje(), 2000);
+            } else {
+                mostrarMensaje(data.error, 'error');
+            }
+        }
+
+        // Construir
+        async function construir() {
+            const response = await fetch('/api/construir', {
+                method: 'POST',
+                headers: {'Content-Type': 'application/json'}
+            });
+            
+            const data = await response.json();
+            
+            if (data.success) {
+                mostrarMensaje(data.mensaje, 'success');
+                document.getElementById('materiales-section').classList.add('hidden');
+                document.getElementById('btn-oleada').classList.remove('hidden');
+                document.getElementById('acciones-catapulta').classList.remove('hidden');
+                actualizarEstado(data.estado);
+                dibujarCampo();
+            } else {
+                mostrarMensaje(data.error, 'error');
+            }
+        }
+
+        // Generar oleada
+        async function generarOleada() {
+            const response = await fetch('/api/generar_oleada', {
+                method: 'POST',
+                headers: {'Content-Type': 'application/json'}
+            });
+            
+            const data = await response.json();
+            
+            if (data.success) {
+                document.getElementById('btn-oleada').classList.add('hidden');
+                document.getElementById('btn-disparar').classList.remove('hidden');
+                actualizarEnemigos(data.enemigos);
+                dibujarCampo();
+                mostrarMensaje(`⚔️ Oleada ${data.nivel} generada: ${data.enemigos.length} enemigos`, 'info');
+                setTimeout(() => ocultarMensaje(), 3000);
+            }
+        }
+
+        // Disparar
+        async function disparar() {
+            if (selectedEnemy === null) {
+                mostrarMensaje('Selecciona un enemigo primero', 'error');
+                return;
+            }
+            
+            const response = await fetch('/api/disparar', {
+                method: 'POST',
+                headers: {'Content-Type': 'application/json'},
+                body: JSON.stringify({enemigo: selectedEnemy})
+            });
+            
+            const data = await response.json();
+            
+            if (data.success) {
+                if (data.acierto) {
+                    if (data.eliminado) {
+                        mostrarMensaje('💥 ¡IMPACTO! ☠️ Enemigo eliminado', 'success');
+                    } else {
+                        mostrarMensaje('💥 ¡IMPACTO! Enemigo herido', 'info');
+                    }
+                } else {
+                    mostrarMensaje('❌ Disparo fallido', 'error');
+                }
+                
+                actualizarEstado(data.estado);
+                actualizarEnemigos(data.enemigos);
+                document.getElementById('puntos').textContent = `💎 Puntos: ${data.puntos}`;
+                dibujarCampo();
+                
+                if (data.victoria) {
+                    setTimeout(() => {
+                        mostrarMensaje(`🎉 ¡Victoria! Nivel ${data.nivel} alcanzado`, 'success');
+                        document.getElementById('nivel').textContent = `🎯 Nivel: ${data.nivel}`;
+                        document.getElementById('btn-oleada').classList.remove('hidden');
+                        document.getElementById('btn-disparar').classList.add('hidden');
+                    }, 1000);
+                }
+                
+                if (data.game_over) {
+                    mostrarMensaje('💀 Catapulta destruida. ¡Repárala!', 'error');
+                    document.getElementById('btn-disparar').classList.add('hidden');
+                }
+            } else {
+                mostrarMensaje(data.error, 'error');
+            }
+        }
+
+        // Reparar
+        async function reparar() {
+            const response = await fetch('/api/reparar', {
+                method: 'POST',
+                headers: {'Content-Type': 'application/json'}
+            });
+            
+            const data = await response.json();
+            
+            if (data.success) {
+                mostrarMensaje(data.mensaje, 'success');
+                actualizarEstado(data.estado);
+                document.getElementById('btn-disparar').classList.remove('hidden');
+                dibujarCampo();
+            } else {
+                mostrarMensaje(data.error, 'error');
+            }
+        }
+
+        // Mejorar
+        async function mostrarMejoras() {
+            const tipo = confirm('¿Refuerzo estructural (OK) o Aumento de potencia (Cancelar)?') ? 'refuerzo' : 'potencia';
+            
+            const response = await fetch('/api/mejorar', {
+                method: 'POST',
+                headers: {'Content-Type': 'application/json'},
+                body: JSON.stringify({tipo})
+            });
+            
+            const data = await response.json();
+            
+            if (data.success) {
+                mostrarMensaje(data.mensaje, 'success');
+                actualizarEstado(data.estado);
+            } else {
+                mostrarMensaje(data.error, 'error');
+            }
+        }
+
+        // Actualizar inventario
+        function actualizarInventario(inv) {
+            const html = `
+                INVENTARIO:
+                Palos: ${inv.palos}
+                Gomas: ${inv.gomas}
+                Tapones: ${inv.tapones}
+                Corchos: ${inv.corchos}
+                Pegamento: ${inv.pegamento ? 'Sí' : 'No'}
+            `;
+            document.getElementById('inventario').textContent = html;
+        }
+
+        // Actualizar estado
+        function actualizarEstado(estado) {
+            if (!estado) return;
+            
+            const html = `
+                <div class="stat-bar">
+                    <div class="stat-label">
+                        <span>Durabilidad</span>
+                        <span>${Math.round(estado.durabilidad_pct)}%</span>
+                    </div>
+                    <div class="progress-bar">
+                        <div class="progress-fill progress-green" style="width: ${estado.durabilidad_pct}%"></div>
+                    </div>
+                </div>
+
+                <div class="stat-bar">
+                    <div class="stat-label">
+                        <span>Potencia</span>
+                        <span>${estado.potencia}</span>
+                    </div>
+                    <div class="progress-bar">
+                        <div class="progress-fill progress-blue" style="width: ${Math.min(100, (estado.potencia/600)*100)}%"></div>
+                    </div>
+                </div>
+
+                <div class="stat-bar">
+                    <div class="stat-label">
+                        <span>Precisión</span>
+                        <span>${Math.round(estado.precision)}%</span>
+                    </div>
+                    <div class="progress-bar">
+                        <div class="progress-fill progress-purple" style="width: ${estado.precision}%"></div>
+                    </div>
+                </div>
+
+                <div class="info-box">
+                    Estado: ${estado.estado}
+                    Alcance: ${estado.alcance}m
+                    Munición: ${estado.inventario.corchos} corchos
+                    Disparos: ${estado.disparos}
+                    Desgaste: ${estado.desgaste}
+                    Enemigos eliminados: ${estado.enemigos_eliminados}
+                </div>
+            `;
+            document.getElementById('estado-catapulta').innerHTML = html;
+        }
+
+        // Actualizar enemigos
+        function actualizarEnemigos(enemigos) {
+            const vivos = enemigos.filter(e => e.vivo);
+            
+            if (vivos.length === 0) {
+                document.getElementById('lista-enemigos').innerHTML = '<p style="text-align: center; padding: 20px 0;">¡Todos los enemigos eliminados!</p>';
+                return;
+            }
+            
+            const html = vivos.map((e, i) => `
+                <div class="enemy-item ${selectedEnemy === i ? 'selected' : ''}" onclick="seleccionarEnemigo(${i})">
+                    <strong>${e.nombre}</strong><br>
+                    ❤️ ${e.vida}/${e.vida_max} | 🛡️ ${e.armadura} | 📏 ${e.distancia}m
+                    <div class="progress-bar" style="margin-top: 5px; height: 8px;">
+                        <div class="progress-fill progress-red" style="width: ${(e.vida/e.vida_max)*100}%"></div>
+                    </div>
+                </div>
+            `).join('');
+            
+            document.getElementById('lista-enemigos').innerHTML = html;
+        }
+
+        // Seleccionar enemigo
+        function seleccionarEnemigo(index) {
+            selectedEnemy = index;
+            const items = document.querySelectorAll('.enemy-item');
+            items.forEach((item, i) => {
+                item.classList.toggle('selected', i === index);
+            });
+        }
+
+        // Dibujar campo de batalla
+        function dibujarCampo() {
+            const canvas = document.getElementById('canvas-batalla');
+            const ctx = canvas.getContext('2d');
+            const w = canvas.width;
+            const h = canvas.height;
+            
+            // Limpiar
+            ctx.clearRect(0, 0, w, h);
+            
+            // Cielo
+            const gradient = ctx.createLinearGradient(0, 0, 0, h);
+            gradient.addColorStop(0, '#87CEEB');
+            gradient.addColorStop(1, '#98D8C8');
+            ctx.fillStyle = gradient;
+            ctx.fillRect(0, 0, w, h);
+            
+            // Suelo
+            ctx.fillStyle = '#7F8C8D';
+            ctx.fillRect(0, h - 50, w, 50);
+            
+            // Catapulta
+            fetch('/api/estado')
+                .then(r => r.json())
+                .then(data => {
+                    if (data.catapulta && data.catapulta.construida) {
+                        const x = 80;
+                        const y = h - 100;
+                        
+                        // Color según estado
+                        let color = '#8B4513';
+                        if (data.catapulta.estado === 'Destruida') color = '#95A5A6';
+                        else if (data.catapulta.estado === 'Dañada') color = '#E67E22';
+                        
+                        // Base
+                        ctx.fillStyle = color;
+                        ctx.fillRect(x - 30, y + 30, 60, 20);
+                        
+                        // Brazo
+                        ctx.strokeStyle = color;
+                        ctx.lineWidth = 8;
+                        ctx.beginPath();
+                        ctx.moveTo(x, y + 30);
+                        ctx.lineTo(x + 40, y - 30);
+                        ctx.stroke();
+                        
+                        // Cesta
+                        ctx.fillStyle = '#C0392B';
+                        ctx.beginPath();
+                        ctx.arc(x + 40, y - 30, 10, 0, Math.PI * 2);
+                        ctx.fill();
+                        
+                        // Nombre
+                        ctx.fillStyle = '#FFF';
+                        ctx.font = 'bold 12px Arial';
+                        ctx.textAlign = 'center';
+                        ctx.fillText(data.catapulta.nombre, x, y + 65);
+                    }
+                    
+                    // Enemigos
+                    if (data.enemigos) {
+                        data.enemigos.filter(e => e.vivo).forEach(e => {
+                            const x = 150 + (e.distancia * 7);
+                            const y = h - 100;
+                            
+                            // Color según tipo
+                            let color = '#3498DB';
+                            if (e.nombre.includes('Caballero')) color = '#95A5A6';
+                            else if (e.nombre.includes('Arquero')) color = '#2ECC71';
+                            else if (e.nombre.includes('Gigante')) color = '#9B59B6';
+                            
+                            // Tamaño
+                            const size = e.nombre.includes('Gigante') ? 30 : 20;
+                            
+                            // Cuerpo
+                            ctx.fillStyle = color;
+                            ctx.beginPath();
+                            ctx.arc(x, y, size / 2, 0, Math.PI * 2);
+                            ctx.fill();
+                            
+                            ctx.strokeStyle = '#000';
+                            ctx.lineWidth = 2;
+                            ctx.stroke();
+                            
+                            // Barra de vida
+                            const barWidth = 40;
+                            const vidaPct = e.vida / e.vida_max;
+                            
+                            ctx.fillStyle = '#7F8C8D';
+                            ctx.fillRect(x - barWidth / 2, y - size - 15, barWidth, 5);
+                            
+                            ctx.fillStyle = '#E74C3C';
+                            ctx.fillRect(x - barWidth / 2, y - size - 15, barWidth * vidaPct, 5);
+                            
+                            // Distancia
+                            ctx.fillStyle = '#FFF';
+                            ctx.font = '10px Arial';
+                            ctx.textAlign = 'center';
+                            ctx.fillText(`${e.distancia}m`, x, y + size + 10);
+                        });
+                    }
+                });
+        }
+
+        // Mensajes
+        function mostrarMensaje(texto, tipo) {
+            const msg = document.getElementById('mensaje');
+            msg.textContent = texto;
+            msg.className = `message ${tipo}`;
+            msg.classList.add('pulse');
+        }
+
+        function ocultarMensaje() {
+            document.getElementById('mensaje').className = 'message';
+        }
+
+        // Inicialización
+        setInterval(dibujarCampo, 100);
+    </script>
+</body>
+</html>
