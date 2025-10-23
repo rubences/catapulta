@@ -4,7 +4,7 @@ Módulo principal de la catapulta
 
 import random
 from enum import Enum
-from .materiales import Palo, Goma, Tapon, Corcho, Pegamento
+from catapulta.materiales import Palo, Goma, Tapon, Corcho, Pegamento
 
 
 class EstadoCatapulta(Enum):

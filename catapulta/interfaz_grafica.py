@@ -5,8 +5,8 @@ Interfaz gráfica para el juego de la Catapulta
 import tkinter as tk
 from tkinter import ttk, messagebox, scrolledtext
 import random
-from .catapulta import Catapulta, EstadoCatapulta
-from .enemigos import generar_oleada_enemigos
+from catapulta.catapulta import Catapulta, EstadoCatapulta
+from catapulta.enemigos import generar_oleada_enemigos
 
 
 class VentanaJuego:
@@ -359,7 +359,7 @@ class VentanaJuego:
         # Disparar
         acierto = self.catapulta.disparar(enemigo)
         
-        if acierto and not enemigo.vivo:
+        if acierto and
             self.puntos += 50
             self.label_puntos.config(text=f"Puntos: {self.puntos}")
         

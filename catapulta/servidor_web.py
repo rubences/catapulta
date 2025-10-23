@@ -5,8 +5,8 @@ Interfaz Web para el juego de la Catapulta usando Flask
 from flask import Flask, render_template, jsonify, request, session
 import secrets
 import json
-from .catapulta import Catapulta, EstadoCatapulta
-from .enemigos import generar_oleada_enemigos
+from catapulta.catapulta import Catapulta, EstadoCatapulta
+from catapulta.enemigos import generar_oleada_enemigos
 
 
 app = Flask(__name__)

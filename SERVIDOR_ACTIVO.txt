@@ -1,0 +1,56 @@
+
+
+╔═══════════════════════════════════════════════════════════════╗
+║         🎮 CATAPULTA - INTERFAZ GRÁFICA WEB 🎮                ║
+╚═══════════════════════════════════════════════════════════════╝
+
+✅ SERVIDOR WEB INICIADO CORRECTAMENTE
+
+🌐 URLs Disponibles:
+   • http://localhost:5000
+   • http://127.0.0.1:5000
+   • http://10.0.2.80:5000
+
+�� CÓMO ACCEDER AL JUEGO:
+
+   1. Abre tu navegador web (Chrome, Firefox, Edge, etc.)
+   2. Ve a: http://localhost:5000
+   3. ¡Disfruta del juego con interfaz gráfica!
+
+🎨 CARACTERÍSTICAS DE LA INTERFAZ WEB:
+
+   ✓ Panel de construcción interactivo
+   ✓ Visualización en tiempo real del estado
+   ✓ Campo de batalla con canvas HTML5
+   ✓ Barras de progreso animadas
+   ✓ Sistema de selección de enemigos
+   ✓ Efectos visuales y animaciones
+   ✓ Responsive design
+
+📋 FLUJO DEL JUEGO:
+
+   1. Crear Catapulta → Darle un nombre
+   2. Agregar Materiales → Usar los selectores
+   3. Construir → Ver la catapulta aparecer
+   4. Generar Oleada → Enemigos aparecen
+   5. Seleccionar Enemigo → Click en la lista
+   6. Disparar → Observar resultados
+   7. Reparar/Mejorar → Según sea necesario
+
+💡 VENTAJAS DE LA VERSIÓN WEB:
+
+   • Funciona en cualquier navegador
+   • No requiere display gráfico (X11)
+   • Compatible con dev containers
+   • Interfaz moderna y responsive
+   • Visualización en tiempo real
+   • Animaciones fluidas
+
+🛠️  PARA DETENER EL SERVIDOR:
+
+   • Presiona Ctrl+C en la terminal
+   • O ejecuta: pkill -f 'python main_web.py'
+
+═══════════════════════════════════════════════════════════════
+
+

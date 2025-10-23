@@ -4,6 +4,7 @@ Módulo del juego principal
 
 from .catapulta import Catapulta
 from .enemigos import generar_oleada_enemigos
+from .catapulta import EstadoCatapulta
 
 
 class Juego:
@@ -155,7 +156,6 @@ class Juego:
                 return False
             
             # Verificar estado de la catapulta
-            from .catapulta import EstadoCatapulta
             if self.catapulta.estado == EstadoCatapulta.DESTRUIDA:
                 print("\n💔 ¡Tu catapulta ha sido destruida!")
                 return False
@@ -165,7 +165,7 @@ class Juego:
             print(f"   Puntos: {self.puntos}")
             
             print("\n¿Qué quieres hacer?")
-            print("1. Disparar")
+            print("1. Atacar enemigo")
             print("2. Ver enemigos")
             print("3. Reparar catapulta (cuesta 1 corcho)")
             print("4. Ver historial de disparos")

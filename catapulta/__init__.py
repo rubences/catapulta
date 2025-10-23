@@ -2,10 +2,10 @@
 Paquete catapulta - Sistema de defensa con catapultas
 """
 
-from .catapulta import Catapulta, EstadoCatapulta
-from .materiales import Palo, Goma, Tapon, Corcho, Pegamento
-from .enemigos import Enemigo, Soldado, Caballero, Arquero, Gigante, generar_oleada_enemigos
-from .juego import Juego
+from catapulta.catapulta import Catapulta, EstadoCatapulta
+from catapulta.materiales import Palo, Goma, Tapon, Corcho, Pegamento
+from catapulta.enemigos import Enemigo, Soldado, Caballero, Arquero, Gigante, generar_oleada_enemigos
+from catapulta.juego import Juego
 
 __all__ = [
     'Catapulta',
