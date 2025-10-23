@@ -1,0 +1,236 @@
+╔══════════════════════════════════════════════════════════════════════╗
+║        🏰 CATAPULTA POO - MEJORAS IMPLEMENTADAS 🏰                   ║
+╚══════════════════════════════════════════════════════════════════════╝
+
+┌──────────────────────────────────────────────────────────────────────┐
+│ 1. 🔸 ESTADO (State)                                                 │
+└──────────────────────────────────────────────────────────────────────┘
+
+   ╭───────────────────────────────────────────────────────────────╮
+   │ Estados de la Catapulta (Enum):                              │
+   │                                                               │
+   │  ┌─────────────────┐                                         │
+   │  │ EN_CONSTRUCCION │ ← Agregando materiales                  │
+   │  └────────┬────────┘                                         │
+   │           │ construir()                                       │
+   │           ▼                                                   │
+   │  ┌─────────────────┐                                         │
+   │  │     LISTA       │ ← Lista para usar                       │
+   │  └────────┬────────┘                                         │
+   │           │ disparar() x N                                   │
+   │           ▼                                                   │
+   │  ┌─────────────────┐                                         │
+   │  │     DANADA      │ ← Durabilidad < 30%                     │
+   │  └────────┬────────┘                                         │
+   │           │ seguir disparando                                │
+   │           ▼                                                   │
+   │  ┌─────────────────┐                                         │
+   │  │   DESTRUIDA     │ ← Durabilidad = 0                       │
+   │  └────────┬────────┘                                         │
+   │           │ reparar()                                        │
+   │           └──────────┐                                       │
+   │                      ▼                                       │
+   │           ┌─────────────────┐                                │
+   │           │     LISTA       │                                │
+   │           └─────────────────┘                                │
+   ╰───────────────────────────────────────────────────────────────╯
+
+   Atributos de Estado:
+   ✓ _estado: EstadoCatapulta
+   ✓ _durabilidad: 0-100
+   ✓ disparos_realizados: contador
+   ✓ nivel_desgaste: acumulativo
+   ✓ enemigos_eliminados: estadística
+   ✓ historial_disparos: lista de acciones
+
+┌──────────────────────────────────────────────────────────────────────┐
+│ 2. ⚙️ COMPORTAMIENTO (Behavior)                                      │
+└──────────────────────────────────────────────────────────────────────┘
+
+   ╭───────────────────────────────────────────────────────────────╮
+   │ Métodos de Construcción:                                      │
+   │  • agregar_palo(longitud)        → Añade estructura          │
+   │  • agregar_goma(elasticidad)     → Añade impulso             │
+   │  • agregar_tapon()               → Añade estabilidad         │
+   │  • agregar_corcho()              → Añade munición            │
+   │  • agregar_pegamento(calidad)    → Material de unión         │
+   │                                                               │
+   │  ⚠️  Solo funcionan en estado: EN_CONSTRUCCION               │
+   ╰───────────────────────────────────────────────────────────────╯
+
+   ╭───────────────────────────────────────────────────────────────╮
+   │ Métodos Principales:                                          │
+   │                                                               │
+   │  construir()                                                  │
+   │    ├─ Valida materiales mínimos                              │
+   │    ├─ Calcula probabilidad de éxito                          │
+   │    ├─ Cambia estado: EN_CONSTRUCCION → LISTA                 │
+   │    └─ Calcula durabilidad inicial                            │
+   │                                                               │
+   │  disparar(enemigo)                                            │
+   │    ├─ Verifica estado (¿puede disparar?)                     │
+   │    ├─ Verifica alcance                                       │
+   │    ├─ Calcula precisión del disparo                          │
+   │    ├─ Aplica daño si acierta                                 │
+   │    ├─ Reduce durabilidad (-5)                                │
+   │    ├─ Aumenta desgaste (+1)                                  │
+   │    ├─ Registra en historial                                  │
+   │    └─ Actualiza estado si durabilidad ≤ 0                    │
+   │                                                               │
+   │  reparar()                                                    │
+   │    ├─ Consume recursos (corchos)                             │
+   │    ├─ Restaura 50% durabilidad                               │
+   │    ├─ Reduce desgaste                                        │
+   │    └─ Cambia estado: DESTRUIDA → LISTA                       │
+   │                                                               │
+   │  mejorar(tipo)                                                │
+   │    ├─ "refuerzo": añade tapón                                │
+   │    └─ "potencia": añade goma de alta calidad                 │
+   ╰───────────────────────────────────────────────────────────────╯
+
+┌──────────────────────────────────────────────────────────────────────┐
+│ 3. 📊 CARACTERÍSTICAS (Properties)                                   │
+└──────────────────────────────────────────────────────────────────────┘
+
+   ╭───────────────────────────────────────────────────────────────╮
+   │ @property potencia                                            │
+   │   ┌─────────────────────────────────────────────────────┐   │
+   │   │ potencia_base = Σ palo.potencia_base                │   │
+   │   │ impulso = Σ goma.impulso                            │   │
+   │   │ bonus_pegamento = pegamento.calidad × 2             │   │
+   │   │                                                      │   │
+   │   │ factor = durabilidad_porcentaje / 100               │   │
+   │   │                                                      │   │
+   │   │ return (base + impulso + bonus) × factor            │   │
+   │   └─────────────────────────────────────────────────────┘   │
+   │   ⚡ Se recalcula cada vez que se accede                     │
+   │   ⚡ Disminuye automáticamente con la durabilidad            │
+   ╰───────────────────────────────────────────────────────────────╯
+
+   ╭───────────────────────────────────────────────────────────────╮
+   │ @property alcance                                             │
+   │   ┌─────────────────────────────────────────────────────┐   │
+   │   │ longitud = Σ palo.longitud                          │   │
+   │   │ elasticidad = Σ goma.elasticidad                    │   │
+   │   │                                                      │   │
+   │   │ alcance_base = (longitud × 0.5) + (elasticidad × 3) │   │
+   │   │ factor = durabilidad_porcentaje / 100               │   │
+   │   │                                                      │   │
+   │   │ return alcance_base × factor                        │   │
+   │   └─────────────────────────────────────────────────────┘   │
+   │   🎯 Determina qué enemigos pueden ser alcanzados            │
+   ╰───────────────────────────────────────────────────────────────╯
+
+   ╭───────────────────────────────────────────────────────────────╮
+   │ @property precision                                           │
+   │   ┌─────────────────────────────────────────────────────┐   │
+   │   │ estabilidad = len(tapones) × 10                     │   │
+   │   │ calidad = pegamento.calidad × 5                     │   │
+   │   │ penalizacion = nivel_desgaste × 2                   │   │
+   │   │                                                      │   │
+   │   │ total = 50 + estabilidad + calidad - penalizacion   │   │
+   │   │                                                      │   │
+   │   │ return max(5, min(95, total))                       │   │
+   │   └─────────────────────────────────────────────────────┘   │
+   │   🎲 Probabilidad de acertar al enemigo                      │
+   │   ⚠️  Disminuye con el desgaste                              │
+   ╰───────────────────────────────────────────────────────────────╯
+
+┌──────────────────────────────────────────────────────────────────────┐
+│ 4. 🔄 INTERACCIÓN: Estado ↔ Comportamiento ↔ Características        │
+└──────────────────────────────────────────────────────────────────────┘
+
+   Ejemplo de Flujo Completo:
+
+   ┌──────────────────────────────────────────────────────────────┐
+   │ INICIO: Estado = EN_CONSTRUCCION, Durabilidad = 0           │
+   └──────────────────────────────────────────────────────────────┘
+                            │
+                            ▼
+   ┌──────────────────────────────────────────────────────────────┐
+   │ COMPORTAMIENTO: agregar_palo(30), agregar_goma(8), ...      │
+   └──────────────────────────────────────────────────────────────┘
+                            │
+                            ▼
+   ┌──────────────────────────────────────────────────────────────┐
+   │ COMPORTAMIENTO: construir()                                  │
+   │   → Estado = LISTA, Durabilidad = 100                        │
+   └──────────────────────────────────────────────────────────────┘
+                            │
+                            ▼
+   ┌──────────────────────────────────────────────────────────────┐
+   │ CARACTERÍSTICAS:                                             │
+   │   potencia = 125      ◄── Calculada dinámicamente            │
+   │   alcance = 45m       ◄── Basada en componentes              │
+   │   precision = 75%     ◄── Factor de tapones                  │
+   └──────────────────────────────────────────────────────────────┘
+                            │
+                            ▼
+   ┌──────────────────────────────────────────────────────────────┐
+   │ COMPORTAMIENTO: disparar(enemigo)                            │
+   │   → Durabilidad = 95 (-5)                                    │
+   │   → disparos_realizados = 1 (+1)                             │
+   │   → nivel_desgaste = 1 (+1)                                  │
+   └──────────────────────────────────────────────────────────────┘
+                            │
+                            ▼
+   ┌──────────────────────────────────────────────────────────────┐
+   │ CARACTERÍSTICAS (RECALCULADAS AUTOMÁTICAMENTE):              │
+   │   potencia = 119      ◄── ¡Ha bajado! (95% durabilidad)     │
+   │   alcance = 43m       ◄── Reducido por durabilidad           │
+   │   precision = 73%     ◄── Afectada por desgaste              │
+   └──────────────────────────────────────────────────────────────┘
+                            │
+                      (19 disparos más)
+                            │
+                            ▼
+   ┌──────────────────────────────────────────────────────────────┐
+   │ Estado = DESTRUIDA, Durabilidad = 0                          │
+   │   potencia = 0        ◄── No puede disparar                  │
+   │   alcance = 0m                                               │
+   └──────────────────────────────────────────────────────────────┘
+                            │
+                            ▼
+   ┌──────────────────────────────────────────────────────────────┐
+   │ COMPORTAMIENTO: reparar()                                    │
+   │   → Estado = LISTA                                           │
+   │   → Durabilidad = 50                                         │
+   └──────────────────────────────────────────────────────────────┘
+                            │
+                            ▼
+   ┌──────────────────────────────────────────────────────────────┐
+   │ CARACTERÍSTICAS (RESTAURADAS):                               │
+   │   potencia = 63       ◄── Funcional de nuevo (50% capacidad)│
+   │   alcance = 23m                                              │
+   │   precision = 65%                                            │
+   └──────────────────────────────────────────────────────────────┘
+
+┌──────────────────────────────────────────────────────────────────────┐
+│ 5. 🎮 NUEVAS FUNCIONALIDADES                                         │
+└──────────────────────────────────────────────────────────────────────┘
+
+   ✓ Sistema de durabilidad con desgaste progresivo
+   ✓ Estados validados (no puedes disparar si está destruida)
+   ✓ Historial de disparos con detalles
+   ✓ Sistema de reparación que consume recursos
+   ✓ Sistema de mejoras post-construcción
+   ✓ Estadísticas completas en tiempo real
+   ✓ Properties que se recalculan automáticamente
+   ✓ Encapsulación con atributos privados (_durabilidad)
+   ✓ Validación de estado antes de cada acción
+   ✓ Feedback visual detallado del estado
+
+┌──────────────────────────────────────────────────────────────────────┐
+│ 6. 📚 ARCHIVOS CREADOS/ACTUALIZADOS                                  │
+└──────────────────────────────────────────────────────────────────────┘
+
+   catapulta/catapulta.py   → MEJORADA con Estados y Properties
+   catapulta/juego.py        → Opciones de reparar y mejorar
+   main.py                   → Introducción explicando POO
+   CONCEPTOS_POO.md          → Documentación completa de conceptos
+   README_POO.md             → Resumen de mejoras implementadas
+   RESUMEN_MEJORAS.txt       → Este archivo (resumen visual)
+
+╔══════════════════════════════════════════════════════════════════════╗
+║  ¡La catapulta ahora es un objeto vivo que evoluciona! 🚀           ║
+╚══════════════════════════════════════════════════════════════════════╝
