@@ -154,6 +154,12 @@ class Juego:
                 print(f"   Enemigos restantes: {len(enemigos_vivos)}")
                 return False
             
+            # Verificar estado de la catapulta
+            from .catapulta import EstadoCatapulta
+            if self.catapulta.estado == EstadoCatapulta.DESTRUIDA:
+                print("\n💔 ¡Tu catapulta ha sido destruida!")
+                return False
+            
             self.catapulta.mostrar_estadisticas()
             print(f"\n   Enemigos vivos: {len(enemigos_vivos)}/{len(self.enemigos)}")
             print(f"   Puntos: {self.puntos}")
@@ -161,7 +167,10 @@ class Juego:
             print("\n¿Qué quieres hacer?")
             print("1. Disparar")
             print("2. Ver enemigos")
-            print("3. Abandonar")
+            print("3. Reparar catapulta (cuesta 1 corcho)")
+            print("4. Ver historial de disparos")
+            print("5. Mejorar catapulta")
+            print("6. Abandonar")
             
             opcion = input("\nOpción: ").strip()
             
@@ -178,6 +187,23 @@ class Juego:
                     print(f"   {i}. {enemigo}")
             
             elif opcion == "3":
+                self.catapulta.reparar()
+            
+            elif opcion == "4":
+                self.catapulta.mostrar_historial()
+            
+            elif opcion == "5":
+                print("\n⚡ MEJORAS DISPONIBLES:")
+                print("1. Refuerzo estructural (agrega tapón)")
+                print("2. Aumento de potencia (agrega goma)")
+                mejora = input("Elige mejora (1-2): ").strip()
+                
+                if mejora == "1":
+                    self.catapulta.mejorar("refuerzo")
+                elif mejora == "2":
+                    self.catapulta.mejorar("potencia")
+            
+            elif opcion == "6":
                 return False
     
     def jugar(self):
