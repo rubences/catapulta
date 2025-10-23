@@ -1,0 +1,187 @@
+╔═══════════════════════════════════════════════════════════════╗
+║         🎮 CATAPULTA - INTERFAZ GRÁFICA WEB 🎮                ║
+╚═══════════════════════════════════════════════════════════════╝
+
+✅ SERVIDOR WEB LISTO PARA USAR
+
+🌐 URLs Disponibles:
+   • http://localhost:5000
+   • http://127.0.0.1:5000
+   • http://10.0.2.80:5000
+
+═══════════════════════════════════════════════════════════════
+
+🚀 INICIO RÁPIDO:
+
+   1. Ejecuta: python main_web.py
+   2. Abre tu navegador en: http://localhost:5000
+   3. ¡Juega!
+
+═══════════════════════════════════════════════════════════════
+
+🎯 CÓMO JUGAR:
+
+   📝 PASO 1: Construcción
+      • Escribe el nombre de tu catapulta
+      • Click en "✨ Crear Catapulta"
+      • Agrega materiales usando los selectores:
+        - Palos (mínimo 2)
+        - Gomas (mínimo 1)
+        - Tapones (recomendado 2+)
+        - Corchos (varios para munición)
+        - Pegamento (calidad alta = mejor)
+      • Click en "🔨 CONSTRUIR CATAPULTA"
+
+   ⚔️ PASO 2: Combate
+      • Click en "⚔️ GENERAR OLEADA DE ENEMIGOS"
+      • Selecciona un enemigo de la lista (click)
+      • Click en "🎯 DISPARAR AL ENEMIGO SELECCIONADO"
+      • Observa las barras de estado cambiar en tiempo real
+
+   🔧 PASO 3: Mantenimiento
+      • Si durabilidad baja: "🔧 Reparar"
+      • Para mejoras: "⚡ Mejorar"
+
+═══════════════════════════════════════════════════════════════
+
+🎨 INTERFAZ VISUAL:
+
+   Panel Izquierdo:
+   ┌─────────────────────────┐
+   │ 🔨 Constructor          │
+   │   • Nombre              │
+   │   • Materiales          │
+   │   • Inventario          │
+   ├─────────────────────────┤
+   │ 📊 Estado               │
+   │   • Barra Durabilidad   │ Verde
+   │   • Barra Potencia      │ Azul
+   │   • Barra Precisión     │ Morado
+   │   • Estadísticas        │
+   │   • Botones acción      │
+   └─────────────────────────┘
+
+   Panel Derecho:
+   ┌─────────────────────────┐
+   │ ⚔️ Campo de Batalla     │
+   │                         │
+   │   🏰 ← Catapulta        │
+   │                         │
+   │   → → → 👾 Enemigos    │
+   │                         │
+   ├─────────────────────────┤
+   │ 👾 Lista de Enemigos    │
+   │   • Soldado             │
+   │   • Caballero           │
+   │   • Arquero             │
+   └─────────────────────────┘
+
+═══════════════════════════════════════════════════════════════
+
+📊 VISUALIZACIÓN POO:
+
+   🔸 ESTADO (State) → Barras en tiempo real
+      • Durabilidad cambia con cada disparo
+      • Color de catapulta según estado
+      • Vida de enemigos actualizada
+
+   ⚙️ COMPORTAMIENTO (Behavior) → Botones interactivos
+      • Cada botón ejecuta un método
+      • Validaciones de estado
+      • Feedback inmediato
+
+   📈 CARACTERÍSTICAS (Properties) → Cálculo dinámico
+      • Potencia se recalcula al instante
+      • Precisión afectada por desgaste
+      • Alcance basado en componentes
+
+═══════════════════════════════════════════════════════════════
+
+💻 TECNOLOGÍAS USADAS:
+
+   Backend:
+   • Flask (servidor web)
+   • Python 3.12
+   • POO avanzado
+
+   Frontend:
+   • HTML5 + CSS3
+   • JavaScript (Vanilla)
+   • Canvas API
+   • Fetch API (AJAX)
+
+═══════════════════════════════════════════════════════════════
+
+🔧 COMANDOS ÚTILES:
+
+   Iniciar servidor:
+   $ python main_web.py
+
+   Detener servidor:
+   Ctrl+C en la terminal
+
+   Ver logs:
+   Se muestran en la terminal
+
+   Reiniciar juego:
+   Recarga la página (F5)
+
+═══════════════════════════════════════════════════════════════
+
+🎯 CARACTERÍSTICAS TÉCNICAS:
+
+   • API REST con JSON
+   • Sesiones por usuario
+   • Actualización asíncrona
+   • Canvas dinámico
+   • Animaciones CSS
+   • Responsive design
+   • Sin dependencias frontend
+
+═══════════════════════════════════════════════════════════════
+
+🐛 SOLUCIÓN DE PROBLEMAS:
+
+   Problema: No se abre la página
+   Solución: Verifica que el servidor esté corriendo
+            $ ps aux | grep main_web
+
+   Problema: Error 500
+   Solución: Revisa los logs en la terminal
+
+   Problema: No aparecen enemigos
+   Solución: Asegúrate de haber construido primero
+
+═══════════════════════════════════════════════════════════════
+
+📚 ARCHIVOS RELACIONADOS:
+
+   Ejecución:
+   • main_web.py              → Inicia servidor web
+   • main_gui.py              → Versión Tkinter (requiere X11)
+   • main.py                  → Versión terminal
+
+   Código:
+   • catapulta/servidor_web.py → Backend Flask
+   • catapulta/templates/index.html → Frontend
+   • catapulta/interfaz_grafica.py → GUI Tkinter
+
+   Documentación:
+   • README_GUI.md            → Guía interfaz gráfica
+   • README_POO.md            → Conceptos POO
+   • CONCEPTOS_POO.md         → Documentación completa
+
+═══════════════════════════════════════════════════════════════
+
+🎉 ¡DISFRUTA DEL JUEGO!
+
+   La mejor forma de aprender POO es viendo cómo:
+   • El ESTADO cambia (barras se mueven)
+   • El COMPORTAMIENTO actúa (botones ejecutan métodos)
+   • Las CARACTERÍSTICAS se calculan (valores dinámicos)
+
+   Todo en tiempo real, todo visual, todo interactivo.
+
+╔═══════════════════════════════════════════════════════════════╗
+║  🏰 ¡Defiende tu castillo con la mejor interfaz web! 🎮       ║
+╚═══════════════════════════════════════════════════════════════╝
